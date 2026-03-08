@@ -1,13 +1,30 @@
-import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { mockEvents, getSpeaker, getVenue, formatPrice, formatDate } from "@/data/mockData";
+import { useEvents, useSpeakers, useDeleteEvent } from "@/hooks/useSupabaseData";
+import { formatPrice, formatDate } from "@/data/mockData";
 import { Plus, Edit, Trash2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 const AdminEvents = () => {
   const { toast } = useToast();
+  const { data: events = [], isLoading } = useEvents(false);
+  const { data: speakers = [] } = useSpeakers(false);
+  const deleteEvent = useDeleteEvent();
+
+  const getSpeakerName = (id: string | null) => {
+    if (!id) return "—";
+    return speakers.find((s) => s.id === id)?.name ?? "Unknown";
+  };
+
+  const handleDelete = async (id: string) => {
+    try {
+      await deleteEvent.mutateAsync(id);
+      toast({ title: "Event deleted" });
+    } catch (err: any) {
+      toast({ title: "Error", description: err.message, variant: "destructive" });
+    }
+  };
 
   return (
     <div>
@@ -32,12 +49,15 @@ const AdminEvents = () => {
               </tr>
             </thead>
             <tbody>
-              {mockEvents.map((event) => {
-                const speaker = getSpeaker(event.speaker_id);
-                return (
+              {isLoading ? (
+                <tr><td colSpan={6} className="p-6 text-center text-muted-foreground">Loading...</td></tr>
+              ) : events.length === 0 ? (
+                <tr><td colSpan={6} className="p-6 text-center text-muted-foreground">No events yet</td></tr>
+              ) : (
+                events.map((event) => (
                   <tr key={event.id} className="border-b border-border last:border-0">
                     <td className="p-3 text-foreground font-medium">{event.title.slice(0, 45)}...</td>
-                    <td className="p-3 text-muted-foreground hidden md:table-cell">{speaker?.name}</td>
+                    <td className="p-3 text-muted-foreground hidden md:table-cell">{getSpeakerName(event.speaker_id)}</td>
                     <td className="p-3 text-muted-foreground hidden md:table-cell">{formatDate(event.start_at)}</td>
                     <td className="p-3 text-foreground">{formatPrice(event.price_cents, event.currency)}</td>
                     <td className="p-3">
@@ -50,14 +70,14 @@ const AdminEvents = () => {
                         <Button variant="ghost" size="icon" onClick={() => toast({ title: "Edit coming soon" })}>
                           <Edit className="h-4 w-4" />
                         </Button>
-                        <Button variant="ghost" size="icon" onClick={() => toast({ title: "Delete coming soon", variant: "destructive" })}>
+                        <Button variant="ghost" size="icon" onClick={() => handleDelete(event.id)} disabled={deleteEvent.isPending}>
                           <Trash2 className="h-4 w-4" />
                         </Button>
                       </div>
                     </td>
                   </tr>
-                );
-              })}
+                ))
+              )}
             </tbody>
           </table>
         </CardContent>

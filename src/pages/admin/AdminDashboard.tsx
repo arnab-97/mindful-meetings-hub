@@ -1,20 +1,27 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { mockEvents, mockBookings, mockSpeakers, mockVenues } from "@/data/mockData";
+import { Badge } from "@/components/ui/badge";
+import { useEvents, useBookings, useSpeakers, useVenues } from "@/hooks/useSupabaseData";
 import { Calendar, Ticket, Users, DollarSign } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 const AdminDashboard = () => {
-  const totalRevenue = mockBookings
+  const { data: events = [] } = useEvents(false);
+  const { data: bookings = [] } = useBookings();
+  const { data: speakers = [] } = useSpeakers(false);
+  const { data: venues = [] } = useVenues(false);
+
+  const totalRevenue = bookings
     .filter((b) => b.status === "paid")
     .reduce((sum, b) => {
-      const event = mockEvents.find((e) => e.id === b.event_id);
+      const event = events.find((e) => e.id === b.event_id);
       return sum + (event ? event.price_cents * b.seats : 0);
     }, 0);
 
   const stats = [
-    { label: "Published Events", value: mockEvents.filter((e) => e.status === "published").length, icon: Calendar, color: "text-primary" },
-    { label: "Total Bookings", value: mockBookings.length, icon: Ticket, color: "text-info" },
-    { label: "Speakers", value: mockSpeakers.length, icon: Users, color: "text-success" },
-    { label: "Revenue", value: `₹${(totalRevenue / 100).toLocaleString()}`, icon: DollarSign, color: "text-warning" },
+    { label: "Published Events", value: events.filter((e) => e.status === "published").length, icon: Calendar, color: "text-primary" },
+    { label: "Total Bookings", value: bookings.length, icon: Ticket, color: "text-blue-400" },
+    { label: "Speakers", value: speakers.length, icon: Users, color: "text-green-400" },
+    { label: "Revenue", value: `₹${(totalRevenue / 100).toLocaleString()}`, icon: DollarSign, color: "text-amber-400" },
   ];
 
   return (
@@ -47,26 +54,25 @@ const AdminDashboard = () => {
               </tr>
             </thead>
             <tbody>
-              {mockBookings.slice(0, 5).map((b) => {
-                const event = mockEvents.find((e) => e.id === b.event_id);
-                return (
-                  <tr key={b.id} className="border-b border-border last:border-0">
-                    <td className="p-3 text-foreground">{b.name}</td>
-                    <td className="p-3 text-muted-foreground">{event?.title.slice(0, 40)}...</td>
-                    <td className="p-3 text-foreground">{b.seats}</td>
-                    <td className="p-3">
-                      <span className={cn(
-                        "text-xs px-2 py-0.5 rounded-full font-medium",
-                        b.status === "paid" && "bg-primary/10 text-primary",
-                        b.status === "pending" && "bg-warning/10 text-warning",
-                        b.status === "cancelled" && "bg-destructive/10 text-destructive",
-                      )}>
-                        {b.status}
-                      </span>
-                    </td>
-                  </tr>
-                );
-              })}
+              {bookings.length === 0 ? (
+                <tr><td colSpan={4} className="p-6 text-center text-muted-foreground">No bookings yet</td></tr>
+              ) : (
+                bookings.slice(0, 5).map((b) => {
+                  const event = events.find((e) => e.id === b.event_id);
+                  return (
+                    <tr key={b.id} className="border-b border-border last:border-0">
+                      <td className="p-3 text-foreground">{b.name}</td>
+                      <td className="p-3 text-muted-foreground">{event?.title?.slice(0, 40) ?? "Unknown"}...</td>
+                      <td className="p-3 text-foreground">{b.seats}</td>
+                      <td className="p-3">
+                        <Badge variant={b.status === "paid" ? "default" : b.status === "pending" ? "secondary" : "destructive"}>
+                          {b.status}
+                        </Badge>
+                      </td>
+                    </tr>
+                  );
+                })
+              )}
             </tbody>
           </table>
         </CardContent>
@@ -76,7 +82,3 @@ const AdminDashboard = () => {
 };
 
 export default AdminDashboard;
-
-function cn(...classes: (string | false | undefined)[]) {
-  return classes.filter(Boolean).join(" ");
-}
