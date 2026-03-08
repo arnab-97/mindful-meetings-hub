@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useEvents, useSpeakers, useVenues } from "@/hooks/useSupabaseData";
 import { ArrowRight, Mic, MapPin } from "lucide-react";
 import { motion } from "framer-motion";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
 const Index = () => {
   const { data: events = [] } = useEvents();
