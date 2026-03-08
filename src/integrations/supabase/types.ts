@@ -14,16 +14,244 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      bookings: {
+        Row: {
+          created_at: string
+          email: string
+          event_id: string
+          id: string
+          name: string
+          phone: string | null
+          seats: number
+          status: Database["public"]["Enums"]["booking_status"]
+          stripe_payment_id: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          event_id: string
+          id?: string
+          name: string
+          phone?: string | null
+          seats?: number
+          status?: Database["public"]["Enums"]["booking_status"]
+          stripe_payment_id?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          event_id?: string
+          id?: string
+          name?: string
+          phone?: string | null
+          seats?: number
+          status?: Database["public"]["Enums"]["booking_status"]
+          stripe_payment_id?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bookings_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      events: {
+        Row: {
+          booked_seats: number
+          capacity: number
+          cover_image: string | null
+          created_at: string
+          currency: string
+          description: string
+          end_at: string
+          id: string
+          price_cents: number
+          speaker_id: string | null
+          start_at: string
+          status: Database["public"]["Enums"]["event_status"]
+          title: string
+          venue_id: string | null
+        }
+        Insert: {
+          booked_seats?: number
+          capacity?: number
+          cover_image?: string | null
+          created_at?: string
+          currency?: string
+          description?: string
+          end_at: string
+          id?: string
+          price_cents?: number
+          speaker_id?: string | null
+          start_at: string
+          status?: Database["public"]["Enums"]["event_status"]
+          title: string
+          venue_id?: string | null
+        }
+        Update: {
+          booked_seats?: number
+          capacity?: number
+          cover_image?: string | null
+          created_at?: string
+          currency?: string
+          description?: string
+          end_at?: string
+          id?: string
+          price_cents?: number
+          speaker_id?: string | null
+          start_at?: string
+          status?: Database["public"]["Enums"]["event_status"]
+          title?: string
+          venue_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "events_speaker_id_fkey"
+            columns: ["speaker_id"]
+            isOneToOne: false
+            referencedRelation: "speakers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "events_venue_id_fkey"
+            columns: ["venue_id"]
+            isOneToOne: false
+            referencedRelation: "venues"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      speakers: {
+        Row: {
+          approved: boolean
+          bio: string
+          created_at: string
+          email: string
+          headshot_url: string | null
+          id: string
+          name: string
+          phone: string | null
+          topics: string[]
+        }
+        Insert: {
+          approved?: boolean
+          bio?: string
+          created_at?: string
+          email: string
+          headshot_url?: string | null
+          id?: string
+          name: string
+          phone?: string | null
+          topics?: string[]
+        }
+        Update: {
+          approved?: boolean
+          bio?: string
+          created_at?: string
+          email?: string
+          headshot_url?: string | null
+          id?: string
+          name?: string
+          phone?: string | null
+          topics?: string[]
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
+      venues: {
+        Row: {
+          address: string
+          approved: boolean
+          capacity: number
+          city: string
+          contact_email: string
+          contact_name: string
+          contact_phone: string | null
+          country: string
+          created_at: string
+          id: string
+          images: string[]
+          latitude: number | null
+          longitude: number | null
+          name: string
+          state: string | null
+        }
+        Insert: {
+          address: string
+          approved?: boolean
+          capacity?: number
+          city: string
+          contact_email: string
+          contact_name: string
+          contact_phone?: string | null
+          country?: string
+          created_at?: string
+          id?: string
+          images?: string[]
+          latitude?: number | null
+          longitude?: number | null
+          name: string
+          state?: string | null
+        }
+        Update: {
+          address?: string
+          approved?: boolean
+          capacity?: number
+          city?: string
+          contact_email?: string
+          contact_name?: string
+          contact_phone?: string | null
+          country?: string
+          created_at?: string
+          id?: string
+          images?: string[]
+          latitude?: number | null
+          longitude?: number | null
+          name?: string
+          state?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "moderator" | "user"
+      booking_status: "pending" | "paid" | "cancelled" | "refunded"
+      event_status: "draft" | "published" | "cancelled"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +378,10 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "moderator", "user"],
+      booking_status: ["pending", "paid", "cancelled", "refunded"],
+      event_status: ["draft", "published", "cancelled"],
+    },
   },
 } as const
