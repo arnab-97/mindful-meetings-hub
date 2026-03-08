@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -17,11 +17,11 @@ const AdminLogin = () => {
   const { toast } = useToast();
   const { signIn, signUp, isAdmin, user } = useAuth();
 
-  // If already logged in as admin, redirect
-  if (user && isAdmin) {
-    navigate("/admin/dashboard");
-    return null;
-  }
+  useEffect(() => {
+    if (user && isAdmin) {
+      navigate("/admin/dashboard");
+    }
+  }, [user, isAdmin, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
