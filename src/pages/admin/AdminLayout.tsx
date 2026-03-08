@@ -2,6 +2,7 @@ import { Link, Outlet, useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { LayoutDashboard, Calendar, Mic, MapPin, Ticket, LogOut } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
 import { useEffect } from "react";
 
 const navItems = [
@@ -15,15 +16,26 @@ const navItems = [
 const AdminLayout = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { user, isAdmin, loading, signOut } = useAuth();
 
   useEffect(() => {
-    if (sessionStorage.getItem("gmc_admin") !== "true") {
+    if (!loading && (!user || !isAdmin)) {
       navigate("/admin");
     }
-  }, [navigate]);
+  }, [loading, user, isAdmin, navigate]);
 
-  const handleLogout = () => {
-    sessionStorage.removeItem("gmc_admin");
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <p className="text-muted-foreground">Loading...</p>
+      </div>
+    );
+  }
+
+  if (!user || !isAdmin) return null;
+
+  const handleLogout = async () => {
+    await signOut();
     navigate("/admin");
   };
 
@@ -55,6 +67,7 @@ const AdminLayout = () => {
           ))}
         </nav>
 
+        <div className="text-xs text-muted-foreground mb-2 px-3">{user.email}</div>
         <Button variant="ghost" size="sm" className="justify-start gap-2 text-muted-foreground" onClick={handleLogout}>
           <LogOut className="h-4 w-4" /> Logout
         </Button>

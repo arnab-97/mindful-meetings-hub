@@ -2,11 +2,25 @@ import { Link } from "react-router-dom";
 import { Calendar, MapPin, Users } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { type Event, getSpeaker, getVenue, formatPrice, formatDate } from "@/data/mockData";
+import { useSpeaker, useVenue } from "@/hooks/useSupabaseData";
+import { formatPrice, formatDate } from "@/data/mockData";
 
-export function EventCard({ event }: { event: Event }) {
-  const speaker = getSpeaker(event.speaker_id);
-  const venue = getVenue(event.venue_id);
+interface EventCardEvent {
+  id: string;
+  title: string;
+  start_at: string;
+  cover_image: string | null;
+  price_cents: number;
+  currency: string;
+  capacity: number;
+  booked_seats: number;
+  speaker_id: string | null;
+  venue_id: string | null;
+}
+
+export function EventCard({ event }: { event: EventCardEvent }) {
+  const { data: speaker } = useSpeaker(event.speaker_id ?? undefined);
+  const { data: venue } = useVenue(event.venue_id ?? undefined);
   const seatsLeft = event.capacity - event.booked_seats;
 
   return (
@@ -14,7 +28,7 @@ export function EventCard({ event }: { event: Event }) {
       <Card className="group overflow-hidden border-border/50 bg-card hover:border-primary/30 transition-all duration-300 hover:shadow-lg hover:shadow-primary/5">
         <div className="relative aspect-[16/9] overflow-hidden">
           <img
-            src={event.cover_image}
+            src={event.cover_image || "/placeholder.svg"}
             alt={event.title}
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
             loading="lazy"

@@ -3,12 +3,24 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { type Event, formatPrice, getSpeaker, getVenue } from "@/data/mockData";
+import { formatPrice } from "@/data/mockData";
+import { useCreateBooking } from "@/hooks/useSupabaseData";
 import { useToast } from "@/hooks/use-toast";
 import { CreditCard, Minus, Plus } from "lucide-react";
 
+interface BookingEvent {
+  id: string;
+  title: string;
+  price_cents: number;
+  currency: string;
+  capacity: number;
+  booked_seats: number;
+  speaker_id: string | null;
+  venue_id: string | null;
+}
+
 interface BookingModalProps {
-  event: Event;
+  event: BookingEvent;
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
@@ -19,23 +31,40 @@ export function BookingModal({ event, open, onOpenChange }: BookingModalProps) {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const { toast } = useToast();
+  const createBooking = useCreateBooking();
 
   const seatsLeft = event.capacity - event.booked_seats;
   const totalCents = event.price_cents * seats;
-  const speaker = getSpeaker(event.speaker_id);
-  const venue = getVenue(event.venue_id);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name || !email || !phone) {
       toast({ title: "Please fill in all fields", variant: "destructive" });
       return;
     }
-    toast({
-      title: "Redirecting to payment...",
-      description: "In production, this would redirect to Stripe Checkout.",
-    });
-    onOpenChange(false);
+
+    try {
+      await createBooking.mutateAsync({
+        event_id: event.id,
+        name,
+        email,
+        phone,
+        seats,
+      });
+      toast({
+        title: "Booking created!",
+        description: event.price_cents === 0
+          ? "You're registered for this free event."
+          : "In production, this would redirect to Stripe Checkout.",
+      });
+      onOpenChange(false);
+      setName("");
+      setEmail("");
+      setPhone("");
+      setSeats(1);
+    } catch (err: any) {
+      toast({ title: "Booking failed", description: err.message, variant: "destructive" });
+    }
   };
 
   return (
@@ -85,9 +114,9 @@ export function BookingModal({ event, open, onOpenChange }: BookingModalProps) {
             </div>
           </div>
 
-          <Button type="submit" className="w-full gap-2" size="lg">
+          <Button type="submit" className="w-full gap-2" size="lg" disabled={createBooking.isPending}>
             <CreditCard className="h-4 w-4" />
-            {event.price_cents === 0 ? "Register (Free)" : `Pay ${formatPrice(totalCents, event.currency)}`}
+            {createBooking.isPending ? "Processing..." : event.price_cents === 0 ? "Register (Free)" : `Pay ${formatPrice(totalCents, event.currency)}`}
           </Button>
         </form>
       </DialogContent>

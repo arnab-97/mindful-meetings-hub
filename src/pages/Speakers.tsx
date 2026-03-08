@@ -1,11 +1,11 @@
 import { Layout } from "@/components/layout/Layout";
 import { SpeakerCard } from "@/components/SpeakerCard";
 import { Button } from "@/components/ui/button";
-import { mockSpeakers } from "@/data/mockData";
+import { useSpeakers } from "@/hooks/useSupabaseData";
 import { Link } from "react-router-dom";
 
 const SpeakersPage = () => {
-  const approved = mockSpeakers.filter((s) => s.approved);
+  const { data: speakers = [], isLoading } = useSpeakers();
 
   return (
     <Layout>
@@ -19,11 +19,17 @@ const SpeakersPage = () => {
             <Link to="/speakers/register">Become a Speaker</Link>
           </Button>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {approved.map((speaker) => (
-            <SpeakerCard key={speaker.id} speaker={speaker} />
-          ))}
-        </div>
+        {isLoading ? (
+          <p className="text-muted-foreground text-center py-12">Loading speakers...</p>
+        ) : speakers.length === 0 ? (
+          <p className="text-muted-foreground text-center py-12">No speakers yet. Be the first to apply!</p>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {speakers.map((speaker) => (
+              <SpeakerCard key={speaker.id} speaker={speaker} />
+            ))}
+          </div>
+        )}
       </div>
     </Layout>
   );

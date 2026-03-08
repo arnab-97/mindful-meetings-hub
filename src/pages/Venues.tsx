@@ -1,11 +1,11 @@
 import { Layout } from "@/components/layout/Layout";
 import { VenueCard } from "@/components/VenueCard";
 import { Button } from "@/components/ui/button";
-import { mockVenues } from "@/data/mockData";
+import { useVenues } from "@/hooks/useSupabaseData";
 import { Link } from "react-router-dom";
 
 const VenuesPage = () => {
-  const approved = mockVenues.filter((v) => v.approved);
+  const { data: venues = [], isLoading } = useVenues();
 
   return (
     <Layout>
@@ -19,11 +19,17 @@ const VenuesPage = () => {
             <Link to="/venues/register">List Your Venue</Link>
           </Button>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {approved.map((venue) => (
-            <VenueCard key={venue.id} venue={venue} />
-          ))}
-        </div>
+        {isLoading ? (
+          <p className="text-muted-foreground text-center py-12">Loading venues...</p>
+        ) : venues.length === 0 ? (
+          <p className="text-muted-foreground text-center py-12">No venues yet. List yours!</p>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {venues.map((venue) => (
+              <VenueCard key={venue.id} venue={venue} />
+            ))}
+          </div>
+        )}
       </div>
     </Layout>
   );

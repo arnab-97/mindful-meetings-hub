@@ -2,14 +2,16 @@ import { Link } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { EventCard } from "@/components/EventCard";
 import { Button } from "@/components/ui/button";
-import { mockEvents, mockSpeakers } from "@/data/mockData";
-import { ArrowRight, Mic, MapPin, Sparkles } from "lucide-react";
+import { useEvents, useSpeakers, useVenues } from "@/hooks/useSupabaseData";
+import { ArrowRight, Mic, MapPin } from "lucide-react";
 import { motion } from "framer-motion";
 
 const Index = () => {
-  const publishedEvents = mockEvents.filter((e) => e.status === "published");
-  const featuredEvents = publishedEvents.slice(0, 3);
-  const upcomingEvents = publishedEvents.slice(0, 6);
+  const { data: events = [] } = useEvents();
+  const { data: speakers = [] } = useSpeakers();
+  const { data: venues = [] } = useVenues();
+
+  const upcomingEvents = events.slice(0, 6);
 
   return (
     <Layout>
@@ -28,7 +30,7 @@ const Index = () => {
               <span className="text-gradient">Converge</span>
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-              Talks, lectures, and conversations that challenge the way you think. 
+              Talks, lectures, and conversations that challenge the way you think.
               Join us in intimate venues for evenings of intellectual exploration.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -50,15 +52,15 @@ const Index = () => {
         <div className="container py-10">
           <div className="grid grid-cols-3 gap-8 text-center">
             <div>
-              <p className="font-display text-3xl md:text-4xl font-bold text-primary">{publishedEvents.length}+</p>
+              <p className="font-display text-3xl md:text-4xl font-bold text-primary">{events.length}+</p>
               <p className="text-sm text-muted-foreground mt-1">Upcoming Events</p>
             </div>
             <div>
-              <p className="font-display text-3xl md:text-4xl font-bold text-primary">{mockSpeakers.length}+</p>
+              <p className="font-display text-3xl md:text-4xl font-bold text-primary">{speakers.length}+</p>
               <p className="text-sm text-muted-foreground mt-1">Expert Speakers</p>
             </div>
             <div>
-              <p className="font-display text-3xl md:text-4xl font-bold text-primary">4</p>
+              <p className="font-display text-3xl md:text-4xl font-bold text-primary">{venues.length}</p>
               <p className="text-sm text-muted-foreground mt-1">Unique Venues</p>
             </div>
           </div>
@@ -77,18 +79,22 @@ const Index = () => {
               <Link to="/events">View all <ArrowRight className="h-4 w-4" /></Link>
             </Button>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {upcomingEvents.map((event, i) => (
-              <motion.div
-                key={event.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: i * 0.1 }}
-              >
-                <EventCard event={event} />
-              </motion.div>
-            ))}
-          </div>
+          {upcomingEvents.length === 0 ? (
+            <p className="text-muted-foreground text-center py-12">No events yet. Check back soon!</p>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {upcomingEvents.map((event, i) => (
+                <motion.div
+                  key={event.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: i * 0.1 }}
+                >
+                  <EventCard event={event} />
+                </motion.div>
+              ))}
+            </div>
+          )}
           <div className="sm:hidden mt-6 text-center">
             <Button asChild variant="outline">
               <Link to="/events">View all events</Link>
