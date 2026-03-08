@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useEvents, useSpeakers, useVenues } from "@/hooks/useSupabaseData";
 import { ArrowRight, Mic, MapPin } from "lucide-react";
 import { motion } from "framer-motion";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
 const Index = () => {
   const { data: events = [] } = useEvents();
@@ -64,6 +65,50 @@ const Index = () => {
               <p className="text-sm text-muted-foreground mt-1">Unique Venues</p>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section className="py-16 md:py-24">
+        <div className="container max-w-3xl">
+          <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground text-center mb-4">
+            Frequently Asked Questions
+          </h2>
+          <p className="text-muted-foreground text-center mb-10">
+            Everything you need to know before attending
+          </p>
+          <Accordion type="single" collapsible className="w-full">
+            <AccordionItem value="ticket-price">
+              <AccordionTrigger>What is included in the ticket price for sessions hosted by The Gray Matter Club?</AccordionTrigger>
+              <AccordionContent>
+                Your ticket includes entry to the full session, a curated Q&A with the speaker, light refreshments (non-alcoholic beverages and snacks), and access to our post-event networking mixer. Some premium events may also include exclusive reading materials or digital resources from the speaker.
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="duration">
+              <AccordionTrigger>How long is each session?</AccordionTrigger>
+              <AccordionContent>
+                Most sessions run for approximately 2 to 2.5 hours. This typically includes a 60–75 minute talk, a 20–30 minute Q&A, and 30 minutes of informal networking afterward. Exact timings are listed on each event's detail page.
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="speaker-register">
+              <AccordionTrigger>How do I register as a speaker?</AccordionTrigger>
+              <AccordionContent>
+                Head over to our <a href="/speakers/register" className="text-primary underline underline-offset-4 hover:text-primary/80">Speaker Registration</a> page and fill out the application form with your bio, topics of expertise, and a brief description of your proposed talk. Our curation team reviews applications on a rolling basis and will get back to you within 7–10 business days.
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="age-bar">
+              <AccordionTrigger>Is there an age restriction to attend?</AccordionTrigger>
+              <AccordionContent>
+                Our events are open to attendees aged 16 and above. Attendees under 18 must be accompanied by a parent or guardian. We believe intellectual curiosity has no age limit, and we welcome young minds eager to learn.
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="alcohol">
+              <AccordionTrigger>Are alcoholic drinks provided at the events?</AccordionTrigger>
+              <AccordionContent>
+                Complimentary beverages are non-alcoholic (tea, coffee, juices, and water). However, some of our venue partners have a bar on-site where you can purchase alcoholic beverages separately at your own discretion. Availability varies by venue.
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
         </div>
       </section>
 
