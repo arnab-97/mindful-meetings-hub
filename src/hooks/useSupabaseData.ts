@@ -168,6 +168,25 @@ export function useUpdateEvent() {
   });
 }
 
+export function useCreateEvent() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (event: {
+      title: string; description: string; start_at: string; end_at: string;
+      speaker_id?: string | null; venue_id?: string | null; capacity: number;
+      price_cents: number; currency: string; cover_image?: string | null; status: string;
+    }) => {
+      const { data, error } = await supabase.from("events").insert({
+        ...event,
+        status: event.status as "draft" | "published" | "cancelled",
+      }).select().single();
+      if (error) throw error;
+      return data;
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["events"] }),
+  });
+}
+
 export function useDeleteEvent() {
   const qc = useQueryClient();
   return useMutation({

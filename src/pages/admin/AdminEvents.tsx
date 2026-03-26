@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -5,12 +6,15 @@ import { useEvents, useSpeakers, useDeleteEvent } from "@/hooks/useSupabaseData"
 import { formatPrice, formatDate } from "@/data/mockData";
 import { Plus, Edit, Trash2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { EventFormDialog } from "@/components/admin/EventFormDialog";
 
 const AdminEvents = () => {
   const { toast } = useToast();
   const { data: events = [], isLoading } = useEvents(false);
   const { data: speakers = [] } = useSpeakers(false);
   const deleteEvent = useDeleteEvent();
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [editEvent, setEditEvent] = useState<any>(null);
 
   const getSpeakerName = (id: string | null) => {
     if (!id) return "—";
@@ -30,7 +34,7 @@ const AdminEvents = () => {
     <div>
       <div className="flex items-center justify-between mb-6">
         <h1 className="font-display text-2xl font-bold text-foreground">Events</h1>
-        <Button className="gap-2" onClick={() => toast({ title: "Event editor coming soon" })}>
+        <Button className="gap-2" onClick={() => { setEditEvent(null); setDialogOpen(true); }}>
           <Plus className="h-4 w-4" /> Create Event
         </Button>
       </div>
@@ -56,7 +60,7 @@ const AdminEvents = () => {
               ) : (
                 events.map((event) => (
                   <tr key={event.id} className="border-b border-border last:border-0">
-                    <td className="p-3 text-foreground font-medium">{event.title.slice(0, 45)}...</td>
+                    <td className="p-3 text-foreground font-medium">{event.title.slice(0, 45)}{event.title.length > 45 ? "..." : ""}</td>
                     <td className="p-3 text-muted-foreground hidden md:table-cell">{getSpeakerName(event.speaker_id)}</td>
                     <td className="p-3 text-muted-foreground hidden md:table-cell">{formatDate(event.start_at)}</td>
                     <td className="p-3 text-foreground">{formatPrice(event.price_cents, event.currency)}</td>
@@ -67,7 +71,7 @@ const AdminEvents = () => {
                     </td>
                     <td className="p-3 text-right">
                       <div className="flex gap-1 justify-end">
-                        <Button variant="ghost" size="icon" onClick={() => toast({ title: "Edit coming soon" })}>
+                        <Button variant="ghost" size="icon" onClick={() => { setEditEvent(event); setDialogOpen(true); }}>
                           <Edit className="h-4 w-4" />
                         </Button>
                         <Button variant="ghost" size="icon" onClick={() => handleDelete(event.id)} disabled={deleteEvent.isPending}>
@@ -82,6 +86,8 @@ const AdminEvents = () => {
           </table>
         </CardContent>
       </Card>
+
+      <EventFormDialog open={dialogOpen} onOpenChange={setDialogOpen} editEvent={editEvent} />
     </div>
   );
 };
