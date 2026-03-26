@@ -8,9 +8,9 @@ import { motion } from "framer-motion";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
 const Index = () => {
-  const { data: events = [] } = useEvents();
-  const { data: speakers = [] } = useSpeakers();
-  const { data: venues = [] } = useVenues();
+  const { data: events = [], isLoading: eventsLoading, isError: eventsError } = useEvents();
+  const { data: speakers = [], isLoading: speakersLoading, isError: speakersError } = useSpeakers();
+  const { data: venues = [], isLoading: venuesLoading, isError: venuesError } = useVenues();
 
   const upcomingEvents = events.slice(0, 6);
 
@@ -124,7 +124,13 @@ const Index = () => {
               <Link to="/events">View all <ArrowRight className="h-4 w-4" /></Link>
             </Button>
           </div>
-          {upcomingEvents.length === 0 ? (
+          {(eventsLoading || speakersLoading || venuesLoading) ? (
+            <p className="text-muted-foreground text-center py-12">Loading latest data...</p>
+          ) : (eventsError || speakersError || venuesError) ? (
+            <p className="text-destructive text-center py-12">
+              We could not load some data from the database right now. Please refresh and try again.
+            </p>
+          ) : upcomingEvents.length === 0 ? (
             <p className="text-muted-foreground text-center py-12">No events yet. Check back soon!</p>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

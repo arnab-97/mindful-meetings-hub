@@ -11,9 +11,9 @@ const EventsPage = () => {
   const [speakerFilter, setSpeakerFilter] = useState("all");
   const [venueFilter, setVenueFilter] = useState("all");
 
-  const { data: events = [], isLoading } = useEvents();
-  const { data: speakers = [] } = useSpeakers();
-  const { data: venues = [] } = useVenues();
+  const { data: events = [], isLoading, isError: eventsError } = useEvents();
+  const { data: speakers = [], isError: speakersError } = useSpeakers();
+  const { data: venues = [], isError: venuesError } = useVenues();
 
   const filtered = useMemo(() => {
     return events.filter((e) => {
@@ -57,6 +57,10 @@ const EventsPage = () => {
 
         {isLoading ? (
           <div className="text-center py-16 text-muted-foreground">Loading events...</div>
+        ) : (eventsError || speakersError || venuesError) ? (
+          <div className="text-center py-16 text-destructive">
+            We could not load events from the database right now. Please refresh and try again.
+          </div>
         ) : filtered.length === 0 ? (
           <div className="text-center py-16 text-muted-foreground">
             <p className="text-lg">No events found matching your filters.</p>
