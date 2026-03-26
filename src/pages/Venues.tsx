@@ -5,7 +5,7 @@ import { useVenues } from "@/hooks/useSupabaseData";
 import { Link } from "react-router-dom";
 
 const VenuesPage = () => {
-  const { data: venues = [], isLoading } = useVenues();
+  const { data: venues = [], isLoading, isError } = useVenues();
 
   return (
     <Layout>
@@ -21,6 +21,10 @@ const VenuesPage = () => {
         </div>
         {isLoading ? (
           <p className="text-muted-foreground text-center py-12">Loading venues...</p>
+        ) : isError ? (
+          <p className="text-destructive text-center py-12">
+            We could not load venues from the database right now. Please refresh and try again.
+          </p>
         ) : venues.length === 0 ? (
           <p className="text-muted-foreground text-center py-12">No venues yet. List yours!</p>
         ) : (

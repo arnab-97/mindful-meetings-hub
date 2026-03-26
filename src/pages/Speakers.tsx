@@ -5,7 +5,7 @@ import { useSpeakers } from "@/hooks/useSupabaseData";
 import { Link } from "react-router-dom";
 
 const SpeakersPage = () => {
-  const { data: speakers = [], isLoading } = useSpeakers();
+  const { data: speakers = [], isLoading, isError } = useSpeakers();
 
   return (
     <Layout>
@@ -21,6 +21,10 @@ const SpeakersPage = () => {
         </div>
         {isLoading ? (
           <p className="text-muted-foreground text-center py-12">Loading speakers...</p>
+        ) : isError ? (
+          <p className="text-destructive text-center py-12">
+            We could not load speakers from the database right now. Please refresh and try again.
+          </p>
         ) : speakers.length === 0 ? (
           <p className="text-muted-foreground text-center py-12">No speakers yet. Be the first to apply!</p>
         ) : (
