@@ -176,7 +176,10 @@ export function useCreateEvent() {
       speaker_id?: string | null; venue_id?: string | null; capacity: number;
       price_cents: number; currency: string; cover_image?: string | null; status: string;
     }) => {
-      const { data, error } = await supabase.from("events").insert(event).select().single();
+      const { data, error } = await supabase.from("events").insert({
+        ...event,
+        status: event.status as "draft" | "published" | "cancelled",
+      }).select().single();
       if (error) throw error;
       return data;
     },
