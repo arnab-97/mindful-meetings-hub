@@ -111,9 +111,8 @@ export function useCreateSpeaker() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (speaker: { name: string; email: string; phone?: string; bio: string; topics: string[]; headshot_url?: string }) => {
-      const { data, error } = await supabase.from("speakers").insert(speaker).select().single();
+      const { error } = await supabase.from("speakers").insert(speaker);
       if (error) throw error;
-      return data;
     },
     onSuccess: () => qc.invalidateQueries({ queryKey: ["speakers"] }),
   });
@@ -126,9 +125,8 @@ export function useCreateVenue() {
       name: string; address: string; city: string; state?: string; country: string;
       capacity: number; contact_name: string; contact_email: string; contact_phone?: string; images?: string[];
     }) => {
-      const { data, error } = await supabase.from("venues").insert(venue).select().single();
+      const { error } = await supabase.from("venues").insert(venue);
       if (error) throw error;
-      return data;
     },
     onSuccess: () => qc.invalidateQueries({ queryKey: ["venues"] }),
   });
