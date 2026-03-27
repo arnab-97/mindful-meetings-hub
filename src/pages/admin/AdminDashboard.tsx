@@ -21,7 +21,7 @@ const AdminDashboard = () => {
     { label: "Published Events", value: events.filter((e) => e.status === "published").length, icon: Calendar, color: "text-primary" },
     { label: "Total Bookings", value: bookings.length, icon: Ticket, color: "text-blue-400" },
     { label: "Speakers", value: speakers.length, icon: Users, color: "text-green-400" },
-    { label: "Revenue", value: `₹${(totalRevenue / 100).toLocaleString()}`, icon: DollarSign, color: "text-amber-400" },
+    { label: "Revenue", value: `₹${totalRevenue.toLocaleString()}`, icon: DollarSign, color: "text-amber-400" },
   ];
 
   return (
