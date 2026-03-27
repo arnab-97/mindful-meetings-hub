@@ -57,7 +57,7 @@ const AdminBookings = () => {
               ) : (
                 bookings.map((b) => {
                   const event = events.find((e) => e.id === b.event_id);
-                  const amount = event ? event.price_cents * b.seats : 0;
+                  const amount = event ? event.price * b.seats : 0;
                   return (
                     <tr key={b.id} className="border-b border-border last:border-0">
                       <td className="p-3 text-foreground font-medium">{b.name}</td>
