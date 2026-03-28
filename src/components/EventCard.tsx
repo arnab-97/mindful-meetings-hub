@@ -10,7 +10,7 @@ interface EventCardEvent {
   title: string;
   start_at: string;
   cover_image: string | null;
-  price_cents: number;
+  price: number;
   currency: string;
   capacity: number;
   booked_seats: number;
@@ -35,7 +35,7 @@ export function EventCard({ event }: { event: EventCardEvent }) {
           />
           <div className="absolute top-3 right-3">
             <Badge className="bg-primary text-primary-foreground font-body text-xs">
-              {formatPrice(event.price_cents, event.currency)}
+              {formatPrice(event.price, event.currency)}
             </Badge>
           </div>
           {seatsLeft < 15 && seatsLeft > 0 && (

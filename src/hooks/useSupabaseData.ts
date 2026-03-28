@@ -174,7 +174,7 @@ export function useCreateEvent() {
     mutationFn: async (event: {
       title: string; description: string; start_at: string; end_at: string;
       speaker_id?: string | null; venue_id?: string | null; capacity: number;
-      price_cents: number; currency: string; cover_image?: string | null; status: string;
+      price: number; currency: string; cover_image?: string | null; status: string;
     }) => {
       const { data, error } = await supabase.from("events").insert({
         ...event,
