@@ -38,7 +38,7 @@ export interface Event {
   venue_id: string;
   capacity: number;
   booked_seats: number;
-  price_cents: number;
+  price: number;
   currency: string;
   cover_image: string;
   status: "draft" | "published" | "cancelled";
