@@ -11,7 +11,7 @@ import { CreditCard, Minus, Plus } from "lucide-react";
 interface BookingEvent {
   id: string;
   title: string;
-  price: number;
+  price_cents: number;
   currency: string;
   capacity: number;
   booked_seats: number;
@@ -34,7 +34,7 @@ export function BookingModal({ event, open, onOpenChange }: BookingModalProps) {
   const createBooking = useCreateBooking();
 
   const seatsLeft = event.capacity - event.booked_seats;
-  const total = event.price * seats;
+  const totalCents = event.price_cents * seats;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -53,7 +53,7 @@ export function BookingModal({ event, open, onOpenChange }: BookingModalProps) {
       });
       toast({
         title: "Booking created!",
-        description: event.price === 0
+        description: event.price_cents === 0
           ? "You're registered for this free event."
           : "In production, this would redirect to Stripe Checkout.",
       });
@@ -105,18 +105,18 @@ export function BookingModal({ event, open, onOpenChange }: BookingModalProps) {
 
           <div className="rounded-lg bg-secondary p-4 space-y-1">
             <div className="flex justify-between text-sm text-muted-foreground">
-              <span>{formatPrice(event.price, event.currency)} × {seats}</span>
-              <span>{formatPrice(total, event.currency)}</span>
+              <span>{formatPrice(event.price_cents, event.currency)} × {seats}</span>
+              <span>{formatPrice(totalCents, event.currency)}</span>
             </div>
             <div className="flex justify-between font-semibold text-foreground pt-1 border-t border-border">
               <span>Total</span>
-              <span className="text-primary">{formatPrice(total, event.currency)}</span>
+              <span className="text-primary">{formatPrice(totalCents, event.currency)}</span>
             </div>
           </div>
 
           <Button type="submit" className="w-full gap-2" size="lg" disabled={createBooking.isPending}>
             <CreditCard className="h-4 w-4" />
-            {createBooking.isPending ? "Processing..." : event.price === 0 ? "Register (Free)" : `Pay ${formatPrice(total, event.currency)}`}
+            {createBooking.isPending ? "Processing..." : event.price_cents === 0 ? "Register (Free)" : `Pay ${formatPrice(totalCents, event.currency)}`}
           </Button>
         </form>
       </DialogContent>
