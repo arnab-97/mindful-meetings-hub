@@ -38,7 +38,7 @@ export interface Event {
   venue_id: string;
   capacity: number;
   booked_seats: number;
-  price_cents: number;
+  price: number;
   currency: string;
   cover_image: string;
   status: "draft" | "published" | "cancelled";
@@ -208,7 +208,7 @@ export const mockEvents: Event[] = [
     venue_id: "v1",
     capacity: 80,
     booked_seats: 52,
-    price_cents: 499,
+    price: 499,
     currency: "INR",
     cover_image: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=1200&h=600&fit=crop",
     status: "published",
@@ -224,7 +224,7 @@ export const mockEvents: Event[] = [
     venue_id: "v2",
     capacity: 120,
     booked_seats: 78,
-    price_cents: 399,
+    price: 399,
     currency: "INR",
     cover_image: "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=1200&h=600&fit=crop",
     status: "published",
@@ -240,7 +240,7 @@ export const mockEvents: Event[] = [
     venue_id: "v3",
     capacity: 50,
     booked_seats: 12,
-    price_cents: 299,
+    price: 299,
     currency: "INR",
     cover_image: "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=1200&h=600&fit=crop",
     status: "published",
@@ -256,7 +256,7 @@ export const mockEvents: Event[] = [
     venue_id: "v4",
     capacity: 60,
     booked_seats: 35,
-    price_cents: 349,
+    price: 349,
     currency: "INR",
     cover_image: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=1200&h=600&fit=crop",
     status: "published",
@@ -272,7 +272,7 @@ export const mockEvents: Event[] = [
     venue_id: "v1",
     capacity: 80,
     booked_seats: 0,
-    price_cents: 449,
+    price: 449,
     currency: "INR",
     cover_image: "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=1200&h=600&fit=crop",
     status: "published",
@@ -288,7 +288,7 @@ export const mockEvents: Event[] = [
     venue_id: "v2",
     capacity: 120,
     booked_seats: 5,
-    price_cents: 0,
+    price: 0,
     currency: "INR",
     cover_image: "https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?w=1200&h=600&fit=crop",
     status: "published",
