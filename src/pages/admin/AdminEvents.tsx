@@ -63,7 +63,7 @@ const AdminEvents = () => {
                     <td className="p-3 text-foreground font-medium">{event.title.slice(0, 45)}{event.title.length > 45 ? "..." : ""}</td>
                     <td className="p-3 text-muted-foreground hidden md:table-cell">{getSpeakerName(event.speaker_id)}</td>
                     <td className="p-3 text-muted-foreground hidden md:table-cell">{formatDate(event.start_at)}</td>
-                    <td className="p-3 text-foreground">{formatPrice(event.price_cents, event.currency)}</td>
+                    <td className="p-3 text-foreground">{formatPrice(event.price, event.currency)}</td>
                     <td className="p-3">
                       <Badge variant={event.status === "published" ? "default" : "secondary"}>
                         {event.status}
