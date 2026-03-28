@@ -4,9 +4,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { formatPrice } from "@/data/mockData";
-import { useCreateBooking } from "@/hooks/useSupabaseData";
 import { useToast } from "@/hooks/use-toast";
-import { CreditCard, Minus, Plus } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { CreditCard, Minus, Plus, Loader2 } from "lucide-react";
 
 interface BookingEvent {
   id: string;
@@ -25,13 +25,33 @@ interface BookingModalProps {
   onOpenChange: (open: boolean) => void;
 }
 
+declare global {
+  interface Window {
+    Razorpay: any;
+  }
+}
+
+function loadRazorpayScript(): Promise<boolean> {
+  return new Promise((resolve) => {
+    if (window.Razorpay) {
+      resolve(true);
+      return;
+    }
+    const script = document.createElement("script");
+    script.src = "https://checkout.razorpay.com/v1/checkout.js";
+    script.onload = () => resolve(true);
+    script.onerror = () => resolve(false);
+    document.body.appendChild(script);
+  });
+}
+
 export function BookingModal({ event, open, onOpenChange }: BookingModalProps) {
   const [seats, setSeats] = useState(1);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
+  const [loading, setLoading] = useState(false);
   const { toast } = useToast();
-  const createBooking = useCreateBooking();
 
   const seatsLeft = event.capacity - event.booked_seats;
   const total = event.price * seats;
@@ -43,28 +63,103 @@ export function BookingModal({ event, open, onOpenChange }: BookingModalProps) {
       return;
     }
 
+    setLoading(true);
+
     try {
-      await createBooking.mutateAsync({
-        event_id: event.id,
-        name,
-        email,
-        phone,
-        seats,
+      // Call edge function to create order
+      const { data, error } = await supabase.functions.invoke("create-razorpay-order", {
+        body: { event_id: event.id, name, email, phone, seats },
       });
-      toast({
-        title: "Booking created!",
-        description: event.price === 0
-          ? "You're registered for this free event."
-          : "In production, this would redirect to Stripe Checkout.",
-      });
-      onOpenChange(false);
-      setName("");
-      setEmail("");
-      setPhone("");
-      setSeats(1);
+
+      if (error) throw new Error(error.message);
+      if (data.error) throw new Error(data.error);
+
+      // Free event — booking created directly
+      if (data.free) {
+        toast({
+          title: "Registration successful!",
+          description: "You're registered for this free event.",
+        });
+        resetAndClose();
+        return;
+      }
+
+      // Load Razorpay checkout
+      const loaded = await loadRazorpayScript();
+      if (!loaded) {
+        throw new Error("Failed to load payment gateway. Please try again.");
+      }
+
+      const options = {
+        key: data.key_id,
+        amount: data.amount,
+        currency: data.currency,
+        name: "The Gray Matter Club",
+        description: data.event_title,
+        order_id: data.order_id,
+        prefill: { name, email, contact: phone },
+        theme: { color: "#D4AF37" },
+        handler: async (response: any) => {
+          try {
+            const { data: verifyData, error: verifyError } =
+              await supabase.functions.invoke("verify-razorpay-payment", {
+                body: {
+                  razorpay_order_id: response.razorpay_order_id,
+                  razorpay_payment_id: response.razorpay_payment_id,
+                  razorpay_signature: response.razorpay_signature,
+                  booking_id: data.booking_id,
+                },
+              });
+
+            if (verifyError || verifyData?.error) {
+              throw new Error(verifyData?.error || verifyError?.message);
+            }
+
+            toast({
+              title: "Payment successful!",
+              description: "Your booking is confirmed. Check your email for details.",
+            });
+            resetAndClose();
+          } catch (err: any) {
+            toast({
+              title: "Payment verification failed",
+              description: err.message,
+              variant: "destructive",
+            });
+          }
+        },
+        modal: {
+          ondismiss: () => {
+            setLoading(false);
+            toast({
+              title: "Payment cancelled",
+              description: "Your booking was not completed.",
+            });
+          },
+        },
+      };
+
+      const rzp = new window.Razorpay(options);
+      rzp.open();
+      return; // Don't setLoading(false) — Razorpay modal handles it
     } catch (err: any) {
-      toast({ title: "Booking failed", description: err.message, variant: "destructive" });
+      toast({
+        title: "Booking failed",
+        description: err.message,
+        variant: "destructive",
+      });
     }
+
+    setLoading(false);
+  };
+
+  const resetAndClose = () => {
+    onOpenChange(false);
+    setName("");
+    setEmail("");
+    setPhone("");
+    setSeats(1);
+    setLoading(false);
   };
 
   return (
@@ -114,9 +209,14 @@ export function BookingModal({ event, open, onOpenChange }: BookingModalProps) {
             </div>
           </div>
 
-          <Button type="submit" className="w-full gap-2" size="lg" disabled={createBooking.isPending}>
-            <CreditCard className="h-4 w-4" />
-            {createBooking.isPending ? "Processing..." : event.price === 0 ? "Register (Free)" : `Pay ${formatPrice(total, event.currency)}`}
+          <Button type="submit" className="w-full gap-2" size="lg" disabled={loading}>
+            {loading ? (
+              <><Loader2 className="h-4 w-4 animate-spin" /> Processing...</>
+            ) : event.price === 0 ? (
+              "Register (Free)"
+            ) : (
+              <><CreditCard className="h-4 w-4" /> Pay {formatPrice(total, event.currency)}</>
+            )}
           </Button>
         </form>
       </DialogContent>
