@@ -56,7 +56,7 @@ const EventDetail = () => {
           <div className="lg:col-span-2 space-y-8">
             <div>
               <Badge className="mb-3 bg-primary text-primary-foreground">
-                {formatPrice(event.price_cents, event.currency)}
+                {formatPrice(event.price, event.currency)}
               </Badge>
               <h1 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-4">{event.title}</h1>
               <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
@@ -94,7 +94,7 @@ const EventDetail = () => {
           <div className="space-y-6">
             <div className="rounded-xl border border-border bg-card p-6 sticky top-20">
               <div className="text-center mb-4">
-                <p className="font-display text-3xl font-bold text-primary">{formatPrice(event.price_cents, event.currency)}</p>
+                <p className="font-display text-3xl font-bold text-primary">{formatPrice(event.price, event.currency)}</p>
                 <p className="text-sm text-muted-foreground">per person</p>
               </div>
               <Button className="w-full mb-4" size="lg" onClick={() => setBookingOpen(true)} disabled={seatsLeft === 0}>
