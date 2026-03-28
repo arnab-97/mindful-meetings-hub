@@ -14,7 +14,7 @@ const AdminDashboard = () => {
     .filter((b) => b.status === "paid")
     .reduce((sum, b) => {
       const event = events.find((e) => e.id === b.event_id);
-      return sum + (event ? event.price * b.seats : 0);
+      return sum + (event ? event.price_cents * b.seats : 0);
     }, 0);
 
   const stats = [

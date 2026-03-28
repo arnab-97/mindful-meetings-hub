@@ -71,7 +71,7 @@ export type Database = {
           description: string
           end_at: string
           id: string
-          price: number
+          price_cents: number
           speaker_id: string | null
           start_at: string
           status: Database["public"]["Enums"]["event_status"]
@@ -87,7 +87,7 @@ export type Database = {
           description?: string
           end_at: string
           id?: string
-          price?: number
+          price_cents?: number
           speaker_id?: string | null
           start_at: string
           status?: Database["public"]["Enums"]["event_status"]
@@ -103,7 +103,7 @@ export type Database = {
           description?: string
           end_at?: string
           id?: string
-          price?: number
+          price_cents?: number
           speaker_id?: string | null
           start_at?: string
           status?: Database["public"]["Enums"]["event_status"]

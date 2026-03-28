@@ -1,1 +1,0 @@
-ALTER TABLE public.events RENAME COLUMN price_cents TO price;

@@ -20,7 +20,7 @@ interface EventFormDialogProps {
     speaker_id: string | null;
     venue_id: string | null;
     capacity: number;
-    price: number;
+    price_cents: number;
     currency: string;
     cover_image: string | null;
     status: string;
@@ -55,7 +55,7 @@ export function EventFormDialog({ open, onOpenChange, editEvent }: EventFormDial
       setSpeakerId(editEvent.speaker_id || "none");
       setVenueId(editEvent.venue_id || "none");
       setCapacity(String(editEvent.capacity));
-      setPriceCents(String(editEvent.price));
+      setPriceCents(String(editEvent.price_cents));
       setStatus(editEvent.status);
     } else {
       setTitle(""); setDescription(""); setStartAt(""); setEndAt("");
@@ -81,7 +81,7 @@ export function EventFormDialog({ open, onOpenChange, editEvent }: EventFormDial
         speaker_id: speakerId === "none" ? null : speakerId,
         venue_id: venueId === "none" ? null : venueId,
         capacity: Number(capacity),
-        price: Number(priceCents),
+        price_cents: Number(priceCents),
         currency,
         cover_image,
         status,
