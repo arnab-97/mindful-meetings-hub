@@ -3,19 +3,85 @@ import { Layout } from "@/components/layout/Layout";
 const Terms = () => (
   <Layout>
     <div className="container py-12 md:py-16 max-w-3xl mx-auto">
-      <h1 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-6">Terms of Service</h1>
-      <div className="space-y-4 text-muted-foreground leading-relaxed text-sm">
-        <p>Last updated: March 2026</p>
-        <h2 className="font-display text-xl font-semibold text-foreground pt-4">1. Acceptance of Terms</h2>
-        <p>By accessing and using The Gray Matter Club website and services, you accept and agree to be bound by these Terms of Service.</p>
-        <h2 className="font-display text-xl font-semibold text-foreground pt-4">2. Event Bookings</h2>
-        <p>All bookings are subject to availability. Payment is processed securely via Stripe. Confirmation emails will be sent upon successful payment.</p>
-        <h2 className="font-display text-xl font-semibold text-foreground pt-4">3. Cancellation & Refunds</h2>
-        <p>Cancellations made 48 hours before the event are eligible for a full refund. Cancellations within 48 hours may receive a partial refund at our discretion. No-shows are not eligible for refunds.</p>
-        <h2 className="font-display text-xl font-semibold text-foreground pt-4">4. Code of Conduct</h2>
-        <p>All attendees are expected to engage respectfully. Harassment, discrimination, or disruptive behavior will not be tolerated and may result in removal from the event without refund.</p>
-        <h2 className="font-display text-xl font-semibold text-foreground pt-4">5. Intellectual Property</h2>
-        <p>All content, branding, and materials remain the property of The Gray Matter Club unless otherwise stated. Recording of talks is not permitted without explicit permission.</p>
+      <h1 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-8">
+        Terms &amp; Conditions
+      </h1>
+      <div className="space-y-6 text-muted-foreground leading-relaxed text-sm">
+        <p>
+          Welcome to the Society of Intellectuals (SOI). By registering for and
+          attending our events, you agree to the following:
+        </p>
+
+        <div className="space-y-3">
+          <h2 className="font-display text-xl font-semibold text-foreground">
+            1. Respectful Participation
+          </h2>
+          <p>
+            We encourage open dialogue and sharing of ideas in a respectful
+            manner.
+          </p>
+          <p>
+            Any behavior that disturbs the decorum of the session will not be
+            tolerated. Society of Intellectuals reserves the right to ask such
+            participants to leave the event immediately.
+          </p>
+        </div>
+
+        <div className="space-y-3">
+          <h2 className="font-display text-xl font-semibold text-foreground">
+            2. Cancellation &amp; Refunds
+          </h2>
+          <p>
+            Our cancellation and refund policy is outlined at{" "}
+            <a
+              href="https://societyofintellectuals.org/cancellation-%26-refund"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary underline hover:text-primary/80 transition-colors"
+            >
+              societyofintellectuals.org/cancellation-&amp;-refund
+            </a>
+            . By registering, you agree to this policy.
+          </p>
+        </div>
+
+        <div className="space-y-3">
+          <h2 className="font-display text-xl font-semibold text-foreground">
+            3. Personal Belongings / Details
+          </h2>
+          <p>
+            Please take care of your personal belongings during the event.
+            Society of Intellectuals will not be responsible for any loss or
+            misplacement.
+          </p>
+          <p>
+            Sharing of personal information with other participants or members is
+            entirely at your own discretion and responsibility.
+          </p>
+        </div>
+
+        <div className="space-y-3">
+          <h2 className="font-display text-xl font-semibold text-foreground">
+            4. Use of Content
+          </h2>
+          <p>
+            Any presentations, materials, or resources shared during SOI events
+            are for personal learning only. Recording or redistribution is not
+            permitted without prior consent.
+          </p>
+          <p>
+            By paying for the seat / buying the ticket, you give us consent to
+            record the videos, photos during the session for our social media
+            usage and promotional purpose.
+          </p>
+        </div>
+
+        <div className="mt-8 p-4 rounded-lg bg-secondary/50 border border-border">
+          <p className="text-foreground font-medium text-sm">
+            By registering for an event, you confirm that you have read and
+            agreed to these Terms &amp; Conditions.
+          </p>
+        </div>
       </div>
     </div>
   </Layout>
