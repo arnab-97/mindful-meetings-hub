@@ -156,7 +156,7 @@ const Index = () => {
               <Mic className="h-8 w-8 text-primary mb-4" />
               <h3 className="font-display text-2xl font-semibold text-foreground mb-2">Share Your Ideas</h3>
               <p className="text-muted-foreground mb-6">
-                Have expertise to share? Apply to become a speaker at The Gray Matter Club.
+                Have expertise to share? Apply to become a speaker at Kaffeine.
               </p>
               <Button asChild>
                 <Link to="/speakers/register">Apply as Speaker</Link>
