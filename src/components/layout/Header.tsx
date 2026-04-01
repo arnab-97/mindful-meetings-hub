@@ -11,6 +11,8 @@ const navLinks = [
   { to: "/venues", label: "Venues" },
   { to: "/about", label: "About" },
   { to: "/contact", label: "Contact" },
+  { to: "/terms", label: "Terms" },
+  { to: "/privacy", label: "Privacy" },
 ];
 
 export function Header() {
