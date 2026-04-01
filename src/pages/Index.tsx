@@ -79,7 +79,7 @@ const Index = () => {
           </p>
           <Accordion type="single" collapsible className="w-full">
             <AccordionItem value="ticket-price">
-              <AccordionTrigger>What is included in the ticket price for sessions hosted by The Gray Matter Club?</AccordionTrigger>
+              <AccordionTrigger>What is included in the ticket price for sessions hosted by Kaffeine?</AccordionTrigger>
               <AccordionContent>
                 Your ticket includes entry to the full session, a curated Q&A with the speaker, light refreshments (non-alcoholic beverages and snacks), and access to our post-event networking mixer. Some premium events may also include exclusive reading materials or digital resources from the speaker.
               </AccordionContent>
