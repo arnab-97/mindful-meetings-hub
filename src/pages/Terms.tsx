@@ -3,19 +3,52 @@ import { Layout } from "@/components/layout/Layout";
 const Terms = () => (
   <Layout>
     <div className="container py-12 md:py-16 max-w-3xl mx-auto">
-      <h1 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-6">Terms of Service</h1>
-      <div className="space-y-4 text-muted-foreground leading-relaxed text-sm">
-        <p>Last updated: March 2026</p>
-        <h2 className="font-display text-xl font-semibold text-foreground pt-4">1. Acceptance of Terms</h2>
-        <p>By accessing and using The Gray Matter Club website and services, you accept and agree to be bound by these Terms of Service.</p>
-        <h2 className="font-display text-xl font-semibold text-foreground pt-4">2. Event Bookings</h2>
-        <p>All bookings are subject to availability. Payment is processed securely via Stripe. Confirmation emails will be sent upon successful payment.</p>
-        <h2 className="font-display text-xl font-semibold text-foreground pt-4">3. Cancellation & Refunds</h2>
-        <p>Cancellations made 48 hours before the event are eligible for a full refund. Cancellations within 48 hours may receive a partial refund at our discretion. No-shows are not eligible for refunds.</p>
-        <h2 className="font-display text-xl font-semibold text-foreground pt-4">4. Code of Conduct</h2>
-        <p>All attendees are expected to engage respectfully. Harassment, discrimination, or disruptive behavior will not be tolerated and may result in removal from the event without refund.</p>
-        <h2 className="font-display text-xl font-semibold text-foreground pt-4">5. Intellectual Property</h2>
-        <p>All content, branding, and materials remain the property of The Gray Matter Club unless otherwise stated. Recording of talks is not permitted without explicit permission.</p>
+      <h1 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-6">Terms & Conditions</h1>
+      <div className="space-y-6 text-muted-foreground leading-relaxed text-sm">
+        <p>
+          Welcome to Kaffeine. By registering for and attending our events, you agree to the following:
+        </p>
+
+        <div>
+          <h2 className="font-display text-xl font-semibold text-foreground mb-2">1. Respectful Participation</h2>
+          <p>
+            We encourage open dialogue and sharing of ideas in a respectful manner.
+          </p>
+          <p className="mt-2">
+            Any behavior that disturbs the decorum of the session will not be tolerated. Kaffeine reserves the right to ask such participants to leave the event immediately.
+          </p>
+        </div>
+
+        <div>
+          <h2 className="font-display text-xl font-semibold text-foreground mb-2">2. Cancellation & Refunds</h2>
+          <p>
+            Our cancellation and refund policy is outlined on our website. By registering, you agree to this policy.
+          </p>
+        </div>
+
+        <div>
+          <h2 className="font-display text-xl font-semibold text-foreground mb-2">3. Personal Belongings / Details</h2>
+          <p>
+            Please take care of your personal belongings during the event. Kaffeine will not be responsible for any loss or misplacement.
+          </p>
+          <p className="mt-2">
+            Sharing of personal information with other participants or members is entirely at your own discretion and responsibility.
+          </p>
+        </div>
+
+        <div>
+          <h2 className="font-display text-xl font-semibold text-foreground mb-2">4. Use of Content</h2>
+          <p>
+            Any presentations, materials, or resources shared during Kaffeine events are for personal learning only. Recording or redistribution is not permitted without prior consent.
+          </p>
+          <p className="mt-2">
+            By paying for the seat / buying the ticket, you give us consent to record the videos, photos during the session for our social media usage and promotional purpose.
+          </p>
+        </div>
+
+        <p className="pt-4 text-foreground font-medium">
+          By registering for an event, you confirm that you have read and agreed to these Terms & Conditions.
+        </p>
       </div>
     </div>
   </Layout>

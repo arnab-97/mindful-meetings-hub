@@ -94,7 +94,7 @@ export function BookingModal({ event, open, onOpenChange }: BookingModalProps) {
         key: data.key_id,
         amount: data.amount,
         currency: data.currency,
-        name: "The Gray Matter Club",
+        name: "Kaffeine",
         description: data.event_title,
         order_id: data.order_id,
         prefill: { name, email, contact: phone },
