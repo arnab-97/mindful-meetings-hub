@@ -56,7 +56,7 @@ const AdminLogin = () => {
             <Lock className="h-5 w-5 text-primary-foreground" />
           </div>
           <CardTitle className="font-display">Admin Access</CardTitle>
-          <CardDescription>The Gray Matter Club</CardDescription>
+          <CardDescription>Kaffeine</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
