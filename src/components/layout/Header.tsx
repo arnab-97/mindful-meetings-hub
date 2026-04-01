@@ -11,6 +11,8 @@ const navLinks = [
   { to: "/venues", label: "Venues" },
   { to: "/about", label: "About" },
   { to: "/contact", label: "Contact" },
+  { to: "/terms", label: "Terms" },
+  { to: "/privacy", label: "Privacy" },
 ];
 
 export function Header() {
@@ -22,10 +24,10 @@ export function Header() {
       <div className="container flex h-16 items-center justify-between">
         <Link to="/" className="flex items-center gap-2">
           <div className="h-8 w-8 rounded-full bg-primary flex items-center justify-center">
-            <span className="font-display text-sm font-bold text-primary-foreground">G</span>
+            <span className="font-display text-sm font-bold text-primary-foreground">K</span>
           </div>
           <span className="font-display text-lg font-semibold tracking-tight text-foreground">
-            The Gray Matter Club
+            Kaffeine
           </span>
         </Link>
 

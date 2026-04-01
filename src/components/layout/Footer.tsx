@@ -8,10 +8,10 @@ export function Footer() {
           <div className="md:col-span-2">
             <div className="flex items-center gap-2 mb-4">
               <div className="h-8 w-8 rounded-full bg-primary flex items-center justify-center">
-                <span className="font-display text-sm font-bold text-primary-foreground">G</span>
+                <span className="font-display text-sm font-bold text-primary-foreground">K</span>
               </div>
               <span className="font-display text-lg font-semibold text-foreground">
-                The Gray Matter Club
+                Kaffeine
               </span>
             </div>
             <p className="text-sm text-muted-foreground max-w-sm">
@@ -41,7 +41,7 @@ export function Footer() {
 
         <div className="mt-10 pt-6 border-t border-border">
           <p className="text-xs text-muted-foreground text-center">
-            © {new Date().getFullYear()} The Gray Matter Club. All rights reserved.
+            © {new Date().getFullYear()} Kaffeine. All rights reserved.
           </p>
         </div>
       </div>
