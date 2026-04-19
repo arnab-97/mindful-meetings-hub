@@ -24,30 +24,31 @@ export function EventCard({ event }: { event: EventCardEvent }) {
   const seatsLeft = event.capacity - event.booked_seats;
 
   return (
-    <Link to={`/events/${event.id}`}>
-      <Card className="group overflow-hidden border-border/50 bg-card hover:border-primary/30 transition-all duration-300 hover:shadow-lg hover:shadow-primary/5">
+    <Link to={`/events/${event.id}`} className="block">
+      <Card className="group relative overflow-hidden glass gradient-border rounded-xl transition-all duration-500 hover:-translate-y-1 hover:shadow-glow">
         <div className="relative aspect-[16/9] overflow-hidden">
           <img
             src={event.cover_image || "/placeholder.svg"}
             alt={event.title}
-            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+            className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
             loading="lazy"
           />
+          <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/20 to-transparent opacity-80" />
           <div className="absolute top-3 right-3">
-            <Badge className="bg-primary text-primary-foreground font-body text-xs">
+            <Badge className="bg-primary/90 text-primary-foreground font-body text-xs backdrop-blur-md shadow-glow">
               {formatPrice(event.price, event.currency)}
             </Badge>
           </div>
           {seatsLeft < 15 && seatsLeft > 0 && (
             <div className="absolute bottom-3 left-3">
-              <Badge variant="destructive" className="font-body text-xs">
+              <Badge variant="destructive" className="font-body text-xs backdrop-blur-md">
                 {seatsLeft} seats left
               </Badge>
             </div>
           )}
         </div>
-        <CardContent className="p-5">
-          <h3 className="font-display text-lg font-semibold text-foreground mb-2 line-clamp-2 group-hover:text-primary transition-colors">
+        <CardContent className="relative p-5">
+          <h3 className="font-display text-lg font-semibold text-foreground mb-2 line-clamp-2 transition-colors group-hover:text-primary">
             {event.title}
           </h3>
           <div className="flex flex-col gap-1.5 text-sm text-muted-foreground">
