@@ -92,7 +92,7 @@ serve(async (req) => {
       body: JSON.stringify({
         amount: amountInPaisa,
         currency: event.currency || "INR",
-        receipt: `evt_${event_id}_${Date.now()}`,
+        receipt: `r_${event_id.slice(0, 8)}_${Date.now()}`,
         notes: { event_id, name, email, seats: String(seats) },
       }),
     });
