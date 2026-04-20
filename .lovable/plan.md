@@ -1,65 +1,34 @@
 
-The user wants the Kaffeine site to feel animated, beautiful, and futuristic — while staying on-brand (dark theme, Playfair + Inter, amber/gold accents). I'll keep the warm intellectual feel but layer in modern motion, depth, and glow effects. No stack changes needed — `framer-motion` is already used, and Tailwind keyframes can be extended.
+## Goal
+Add a beautiful animated splash/loading screen that appears once when users first enter the Kaffeine site, then gracefully fades away to reveal the app.
 
-## Vision
+## Approach
+A full-screen overlay mounted at the app root (in `App.tsx`) that auto-dismisses after a short duration (≈1.8s) or as soon as fonts/initial render are ready. Uses framer-motion (already installed) and the existing amber/glow design tokens — no new dependencies.
 
-A "warm futurism" feel: deep dark backgrounds with subtle animated gradients, glowing amber accents, soft glassmorphism on cards, smooth scroll-triggered reveals, and tasteful micro-interactions. Premium and intellectual — not gamer/neon.
+Shown only on the first visit per session (sessionStorage flag) so it doesn't interrupt every navigation.
 
-## Plan
+## What to build
 
-### 1. Design tokens & global polish (`src/index.css`, `tailwind.config.ts`)
-- Add glow utilities: `shadow-glow`, `shadow-glow-lg` using amber primary at low opacity.
-- Add glass utility: `.glass` (backdrop-blur + translucent card bg + subtle border).
-- Add gradient text variants and an animated gradient background utility.
-- New keyframes: `float`, `shimmer`, `glow-pulse`, `gradient-shift`, `slide-up-fade`, `scale-in`.
-- Smooth scroll + custom amber-tinted scrollbar + selection color.
-- Subtle noise/grain overlay option for depth.
+### 1. New component: `src/components/SplashScreen.tsx`
+A fixed full-screen layer with:
+- **Background**: Deep `bg-background` with drifting amber radial gradients (reuse `animate-orb-drift` keyframe).
+- **Center mark**: Animated "K" logo mark in a circle with `animate-glow-pulse`, surrounded by a rotating conic-gradient ring (amber → transparent).
+- **Wordmark**: "Kaffeine" in Playfair Display, letters revealed with a staggered fade+rise (framer-motion).
+- **Tagline**: "Where minds converge" fading in below after the wordmark.
+- **Progress bar**: Thin amber gradient bar at the bottom that fills 0→100% over the splash duration (shimmer effect).
+- **Exit**: After ~1.8s, the whole layer fades + scales out (0.6s) using `AnimatePresence`.
+- Respects `prefers-reduced-motion` — skips the heavy animation, shows a quick fade.
 
-### 2. Reusable motion primitives (new files)
-- `src/components/motion/AnimatedBackground.tsx` — fixed full-screen layer with slow-moving radial amber gradients + grain.
-- `src/components/motion/Reveal.tsx` — wrapper using framer-motion `whileInView` for scroll-triggered fade-up (used across pages).
-- `src/components/motion/Spotlight.tsx` — mouse-follow glow for hero sections.
-- `src/components/motion/MagneticButton.tsx` — buttons that subtly track the cursor.
+### 2. Wire it into `src/App.tsx`
+- Add `useState` for `loading`, default `true` only if `sessionStorage.getItem("kaffeine_splash_seen")` is null.
+- Render `<AnimatePresence>` wrapping `<SplashScreen onDone={...} />` above the `BrowserRouter`.
+- On done: set `sessionStorage` flag and flip `loading` to false.
 
-### 3. Hero redesign (`src/pages/Index.tsx`)
-- Add Spotlight + animated gradient orbs behind the headline.
-- Animate headline word-by-word (stagger), with the "Converge" word getting an animated gradient sweep.
-- Floating decorative elements (subtle rings/dots).
-- CTA buttons become MagneticButtons with glow on hover.
+## Out of scope
+- No route-level loading spinners (separate concern).
+- No skeleton changes — those already shimmer.
+- No backend / asset preloading logic — purely a visual splash.
 
-### 4. Header (`src/components/layout/Header.tsx`)
-- Animated logo (subtle pulse glow on the K mark).
-- Active link gets an animated underline (layoutId for smooth transition between links).
-- Header background sharpens (more blur + border glow) on scroll.
-
-### 5. Cards (`EventCard`, `SpeakerCard`, `VenueCard`)
-- Glassmorphism style, gradient border on hover, image zoom + tilt on hover, glow shadow.
-- Price/date badges get the amber glow treatment.
-
-### 6. Section transitions
-- Stats section: animated count-up on scroll into view.
-- FAQ: smoother accordion + glow on the active item.
-- Upcoming Events grid: staggered Reveal on scroll.
-- CTA cards (Share Ideas / Host Event): hover lift + animated icon.
-
-### 7. Page transitions (`src/App.tsx`)
-- Wrap routes in framer-motion `AnimatePresence` for fade/slide between pages.
-
-### 8. Sub-pages polish
-- `Events`, `Speakers`, `Venues`: animated filter bar, staggered grid reveals.
-- `About`, `Terms`, `Privacy`: Reveal-wrapped sections, animated section dividers.
-- `Footer`: subtle top gradient line, hover effects on links.
-
-### 9. Loading & feedback
-- Replace plain skeletons with shimmer-animated skeletons.
-- Toast/sonner: glassy style aligned with new theme.
-
-## Out of scope (to keep this focused)
-- No 3D / react-three-fiber (can be a follow-up).
-- No content/copy changes.
-- No backend or schema changes.
-- Respects `prefers-reduced-motion` — heavy animations gated behind the media query.
-
-## Files touched (estimate)
-- New: 4 motion primitive components.
-- Edited: `index.css`, `tailwind.config.ts`, `App.tsx`, `Header.tsx`, `Footer.tsx`, `Index.tsx`, 3 card components, `Events.tsx`, `Speakers.tsx`, `Venues.tsx`, `About.tsx`, `Terms.tsx`, `Privacy.tsx`, `skeleton.tsx`.
+## Files touched
+- **New**: `src/components/SplashScreen.tsx`
+- **Edited**: `src/App.tsx`
